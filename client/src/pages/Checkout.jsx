@@ -178,9 +178,9 @@ export default function Checkout() {
           }
         },
         prefill: {
-          name: addr.fullName || user.name,
-          email: user.email,
-          contact: addr.phone,
+          name: addr.fullName || user.name || "",
+          email: user.email || "",
+          contact: addr.phone || "",
         },
         theme: { color: "#b8964e" },
         modal: {

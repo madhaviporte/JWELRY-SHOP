@@ -262,7 +262,7 @@ h4 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 .empty-state p { margin-bottom: 24px; max-width: 400px; }
 
 /* Page Layout */
-.page { padding: 40px 0 80px; min-height: calc(100vh - var(--nav-height)); }
+.page { padding: 40px 0 80px; min-height: calc(100vh - var(--nav-height)); overflow-x: hidden; }
 .page-header {
   margin-bottom: 32px;
   padding-bottom: 20px;

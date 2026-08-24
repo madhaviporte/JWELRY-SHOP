@@ -35,6 +35,19 @@ export default function Shop() {
     newArrival: searchParams.get("newArrival") || "",
   });
 
+  useEffect(() => {
+    setFilters({
+      search: searchParams.get("search") || "",
+      material: searchParams.get("material") || "",
+      minPrice: searchParams.get("minPrice") || "",
+      maxPrice: searchParams.get("maxPrice") || "",
+      sort: searchParams.get("sort") || "-createdAt",
+      featured: searchParams.get("featured") || "",
+      bestseller: searchParams.get("bestseller") || "",
+      newArrival: searchParams.get("newArrival") || "",
+    });
+  }, [searchParams]);
+
   const currentPage = Number(searchParams.get("page")) || 1;
 
   const fetchProducts = useCallback(async () => {
@@ -108,166 +121,165 @@ export default function Shop() {
   const activeCategory = categories.find((c) => c.slug === category);
 
   return (
-    <div className="page">
-      <div className="container">
-        <div className="page-header">
-          <h1>{activeCategory ? activeCategory.name : searchParams.get("search") ? `Results for "${searchParams.get("search")}"` : "Shop All Jewellery"}</h1>
-          <p>{pagination.total} {pagination.total === 1 ? "product" : "products"} found</p>
-        </div>
-
-        <div className="shop-layout">
-          {/* Filters Sidebar */}
-          <aside className={`shop-filters ${filtersOpen ? "shop-filters--open" : ""}`}>
-            <div className="shop-filters__header">
-              <h3>Filters</h3>
-              <button onClick={() => setFiltersOpen(false)} className="shop-filters__close">
-                <FiX size={20} />
-              </button>
-            </div>
-
-            <div className="shop-filters__section">
-              <h4>Category</h4>
-              <select
-                value={category || ""}
-                onChange={(e) => {
-                  if (e.target.value) {
-                    window.location.href = `/shop/${e.target.value}`;
-                  } else {
-                    window.location.href = "/shop";
-                  }
-                }}
-                className="form-input"
-              >
-                <option value="">All Categories</option>
-                {categories.map((c) => (
-                  <option key={c._id} value={c.slug}>{c.name}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="shop-filters__section">
-              <h4>Material</h4>
-              <div className="shop-filters__chips">
-                {MATERIALS.map((m) => (
-                  <button
-                    key={m}
-                    className={`shop-filters__chip ${filters.material === m ? "active" : ""}`}
-                    onClick={() => handleFilterChange("material", filters.material === m ? "" : m)}
-                  >
-                    {m.replace("-", " ")}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="shop-filters__section">
-              <h4>Price Range</h4>
-              <div className="shop-filters__price">
-                <input
-                  type="number"
-                  placeholder="Min"
-                  value={filters.minPrice}
-                  onChange={(e) => handleFilterChange("minPrice", e.target.value)}
-                  className="form-input"
-                />
-                <span>—</span>
-                <input
-                  type="number"
-                  placeholder="Max"
-                  value={filters.maxPrice}
-                  onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
-                  className="form-input"
-                />
-              </div>
-            </div>
-
-            <div className="shop-filters__section">
-              <h4>Special</h4>
-              <div className="shop-filters__chips">
-                <button
-                  className={`shop-filters__chip ${filters.featured ? "active" : ""}`}
-                  onClick={() => handleFilterChange("featured", filters.featured ? "" : "true")}
-                >
-                  Featured
-                </button>
-                <button
-                  className={`shop-filters__chip ${filters.bestseller ? "active" : ""}`}
-                  onClick={() => handleFilterChange("bestseller", filters.bestseller ? "" : "true")}
-                >
-                  Best Sellers
-                </button>
-                <button
-                  className={`shop-filters__chip ${filters.newArrival ? "active" : ""}`}
-                  onClick={() => handleFilterChange("newArrival", filters.newArrival ? "" : "true")}
-                >
-                  New Arrivals
-                </button>
-              </div>
-            </div>
-
-            <div className="shop-filters__actions">
-              <button className="btn btn-primary" onClick={handleApplyFilters} style={{ width: "100%" }}>
-                Apply Filters
-              </button>
-              <button className="btn btn-ghost" onClick={handleClearFilters} style={{ width: "100%" }}>
-                Clear All
-              </button>
-            </div>
-          </aside>
-
-          {/* Products */}
-          <div className="shop-main">
-            <div className="shop-toolbar">
-              <button className="btn btn-ghost shop-toolbar__filter-btn" onClick={() => setFiltersOpen(true)}>
-                <FiSliders size={16} /> Filters
-              </button>
-              <select
-                value={filters.sort}
-                onChange={(e) => {
-                  handleFilterChange("sort", e.target.value);
-                  const params = new URLSearchParams(searchParams);
-                  params.set("sort", e.target.value);
-                  params.set("page", "1");
-                  setSearchParams(params);
-                }}
-                className="form-input shop-toolbar__sort"
-              >
-                {SORT_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))}
-              </select>
-            </div>
-
-            {loading ? (
-              <div className="loading-page">
-                <div className="spinner" />
-                <p>Loading products...</p>
-              </div>
-            ) : products.length === 0 ? (
-              <div className="empty-state">
-                <h3>No products found</h3>
-                <p>Try adjusting your filters or search terms</p>
-                <button className="btn btn-outline" onClick={handleClearFilters}>Clear Filters</button>
-              </div>
-            ) : (
-              <>
-                <div className="products-grid">
-                  {products.map((product) => (
-                    <ProductCard key={product._id} product={product} />
-                  ))}
-                </div>
-                <Pagination
-                  page={pagination.page}
-                  pages={pagination.pages}
-                  onPageChange={handlePageChange}
-                />
-              </>
-            )}
+    <div className="shop-page">
+      <div className="shop-layout">
+        {/* LEFT SIDEBAR — sticky, scrollable with page */}
+        <aside className={`shop-sidebar ${filtersOpen ? "shop-sidebar--open" : ""}`}>
+          <div className="shop-sidebar__header">
+            <h3>Filters</h3>
+            <button onClick={() => setFiltersOpen(false)} className="shop-sidebar__close">
+              <FiX size={20} />
+            </button>
           </div>
+
+          <div className="shop-sidebar__section">
+            <h4>Category</h4>
+            <select
+              value={category || ""}
+              onChange={(e) => {
+                if (e.target.value) {
+                  window.location.href = `/shop/${e.target.value}`;
+                } else {
+                  window.location.href = "/shop";
+                }
+              }}
+              className="form-input"
+            >
+              <option value="">All Categories</option>
+              {categories.map((c) => (
+                <option key={c._id} value={c.slug}>{c.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="shop-sidebar__section">
+            <h4>Material</h4>
+            <div className="shop-sidebar__chips">
+              {MATERIALS.map((m) => (
+                <button
+                  key={m}
+                  className={`shop-sidebar__chip ${filters.material === m ? "active" : ""}`}
+                  onClick={() => handleFilterChange("material", filters.material === m ? "" : m)}
+                >
+                  {m.replace("-", " ")}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="shop-sidebar__section">
+            <h4>Price Range</h4>
+            <div className="shop-sidebar__price">
+              <input
+                type="number"
+                placeholder="Min"
+                value={filters.minPrice}
+                onChange={(e) => handleFilterChange("minPrice", e.target.value)}
+                className="form-input"
+              />
+              <span>—</span>
+              <input
+                type="number"
+                placeholder="Max"
+                value={filters.maxPrice}
+                onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
+                className="form-input"
+              />
+            </div>
+          </div>
+
+          <div className="shop-sidebar__section">
+            <h4>Special</h4>
+            <div className="shop-sidebar__chips">
+              <button
+                className={`shop-sidebar__chip ${filters.featured ? "active" : ""}`}
+                onClick={() => handleFilterChange("featured", filters.featured ? "" : "true")}
+              >
+                Featured
+              </button>
+              <button
+                className={`shop-sidebar__chip ${filters.bestseller ? "active" : ""}`}
+                onClick={() => handleFilterChange("bestseller", filters.bestseller ? "" : "true")}
+              >
+                Best Sellers
+              </button>
+              <button
+                className={`shop-sidebar__chip ${filters.newArrival ? "active" : ""}`}
+                onClick={() => handleFilterChange("newArrival", filters.newArrival ? "" : "true")}
+              >
+                New Arrivals
+              </button>
+            </div>
+          </div>
+
+          <div className="shop-sidebar__actions">
+            <button className="btn btn-primary" onClick={handleApplyFilters} style={{ width: "100%" }}>
+              Apply Filters
+            </button>
+            <button className="btn btn-ghost" onClick={handleClearFilters} style={{ width: "100%" }}>
+              Clear All
+            </button>
+          </div>
+        </aside>
+
+        {/* RIGHT PRODUCTS — scrollable with page */}
+        <div className="shop-products">
+          <div className="page-header">
+            <h1>{activeCategory ? activeCategory.name : searchParams.get("search") ? `Results for "${searchParams.get("search")}"` : "Shop All Jewellery"}</h1>
+            <p>{pagination.total} {pagination.total === 1 ? "product" : "products"} found</p>
+          </div>
+
+          <div className="shop-toolbar">
+            <button className="btn btn-ghost shop-toolbar__filter-btn" onClick={() => setFiltersOpen(!filtersOpen)}>
+              <FiSliders size={16} /> Filters
+            </button>
+            <select
+              value={filters.sort}
+              onChange={(e) => {
+                handleFilterChange("sort", e.target.value);
+                const params = new URLSearchParams(searchParams);
+                params.set("sort", e.target.value);
+                params.set("page", "1");
+                setSearchParams(params);
+              }}
+              className="form-input shop-toolbar__sort"
+            >
+              {SORT_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+
+          {loading ? (
+            <div className="loading-page">
+              <div className="spinner" />
+              <p>Loading products...</p>
+            </div>
+          ) : products.length === 0 ? (
+            <div className="empty-state">
+              <h3>No products found</h3>
+              <p>Try adjusting your filters or search terms</p>
+              <button className="btn btn-outline" onClick={handleClearFilters}>Clear Filters</button>
+            </div>
+          ) : (
+            <>
+              <div className="products-grid">
+                {products.map((product) => (
+                  <ProductCard key={product._id} product={product} />
+                ))}
+              </div>
+              <Pagination
+                page={pagination.page}
+                pages={pagination.pages}
+                onPageChange={handlePageChange}
+              />
+            </>
+          )}
         </div>
       </div>
 
-      {filtersOpen && <div className="shop-filters__overlay" onClick={() => setFiltersOpen(false)} />}
+      {/* Mobile overlay */}
+      {filtersOpen && <div className="shop-sidebar__overlay" onClick={() => setFiltersOpen(false)} />}
     </div>
   );
 }
