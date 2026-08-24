@@ -7,22 +7,22 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const getCurrentUser = async () => {
-    try {
-      const response = await api.get("/auth/me");
-
-      if (response.data.success) {
-        setUser(response.data.user);
-      }
-    } catch (error) {
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    getCurrentUser();
+    let cancelled = false;
+    const checkAuth = async () => {
+      try {
+        const response = await api.get("/auth/me");
+        if (!cancelled && response.data.success) {
+          setUser(response.data.user);
+        }
+      } catch {
+        if (!cancelled) setUser(null);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+    checkAuth();
+    return () => { cancelled = true; };
   }, []);
 
   const login = async (email, password) => {
@@ -60,7 +60,6 @@ export const AuthProvider = ({ children }) => {
         login,
         register,
         logout,
-        getCurrentUser,
       }}
     >
       {children}
@@ -68,6 +67,7 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
 

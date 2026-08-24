@@ -40,28 +40,18 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
 
-    address: {
-      street: {
-        type: String,
-        default: "",
+    address: [
+      {
+        fullName: { type: String, required: true },
+        phone: { type: String, required: true },
+        address: { type: String, required: true },
+        city: { type: String, required: true },
+        state: { type: String, required: true },
+        postalCode: { type: String, required: true },
+        country: { type: String, default: "India" },
+        isDefault: { type: Boolean, default: false },
       },
-      city: {
-        type: String,
-        default: "",
-      },
-      state: {
-        type: String,
-        default: "",
-      },
-      postalCode: {
-        type: String,
-        default: "",
-      },
-      country: {
-        type: String,
-        default: "India",
-      },
-    },
+    ],
   },
   {
     timestamps: true,
