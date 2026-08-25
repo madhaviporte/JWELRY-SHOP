@@ -15,13 +15,22 @@ const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 
+// Trust reverse proxy (e.g. Render Load Balancers)
+app.set("trust proxy", 1);
+
 // Security headers
 app.use(helmet());
 
 // CORS — support multiple origins (local dev + production)
-const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
-  .split(",")
-  .map((o) => o.trim());
+const defaultAllowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "https://jwelry-shop-alpha.vercel.app",
+];
+const envOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(",").map((o) => o.trim())
+  : [];
+const allowedOrigins = [...new Set([...defaultAllowedOrigins, ...envOrigins])];
 
 app.use(
   cors({

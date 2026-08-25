@@ -2,6 +2,13 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
+const checkProduction = (req) => {
+  return process.env.NODE_ENV === "production" ||
+    req.secure ||
+    req.headers["x-forwarded-proto"] === "https" ||
+    (req.headers.origin && !req.headers.origin.includes("localhost") && !req.headers.origin.includes("127.0.0.1"));
+};
+
 const registerUser = async (req, res) => {
   try {
     const { name, email, password, phone } = req.body;
@@ -101,10 +108,12 @@ const loginUser = async (req, res) => {
 
     const token = generateToken(user._id.toString());
 
+    const isProd = checkProduction(req);
+
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -137,10 +146,12 @@ const getMe = async (req, res) => {
 
 const logoutUser = async (req, res) => {
   try {
+    const isProd = checkProduction(req);
+
     res.cookie("token", "", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       expires: new Date(0),
     });
 
