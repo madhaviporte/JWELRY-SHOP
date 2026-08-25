@@ -135,6 +135,13 @@
   .product-card__price { font-size: 0.85rem; }
   .product-card__original-price { font-size: 0.75rem; }
 }
+.product-card__buy-row {
+  margin-top: 10px;
+}
+.product-card__buy-btn {
+  width: 100%;
+  gap: 6px;
+}
 @media (max-width: 480px) {
   .product-card__image-wrap { aspect-ratio: 1; }
   .product-card__info { padding: 8px; }
@@ -146,4 +153,5 @@
   .product-card__new-badge { padding: 2px 6px; font-size: 0.6rem; top: 6px; right: 6px; }
   .product-card__action-btn { width: 32px; height: 32px; }
   .product-card__actions { bottom: 8px; right: 8px; gap: 6px; }
+  .product-card__buy-btn { font-size: 0.7rem; padding: 6px 12px; }
 }

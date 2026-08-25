@@ -1,12 +1,15 @@
-import { Link } from "react-router-dom";
-import { FiHeart, FiShoppingBag } from "react-icons/fi";
+import { Link, useNavigate } from "react-router-dom";
+import { FiHeart, FiShoppingBag, FiZap } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
 import toast from "react-hot-toast";
 import api from "../services/api";
 import "./ProductCard.css";
 
 export default function ProductCard({ product, onWishlistChange }) {
   const { user } = useAuth();
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
 
   const handleAddToWishlist = async (e) => {
     e.preventDefault();
@@ -36,8 +39,23 @@ export default function ProductCard({ product, onWishlistChange }) {
       return;
     }
     try {
-      await api.post("/cart", { productId: product._id, quantity: 1 });
+      await addToCart(product._id, 1);
       toast.success("Added to cart");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to add to cart");
+    }
+  };
+
+  const handleBuyNow = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) {
+      toast.error("Please sign in to buy now");
+      return;
+    }
+    try {
+      await addToCart(product._id, 1);
+      navigate("/checkout");
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to add to cart");
     }
@@ -90,6 +108,11 @@ export default function ProductCard({ product, onWishlistChange }) {
             <span className="product-card__review-count">({product.numReviews})</span>
           </div>
         )}
+        <div className="product-card__buy-row">
+          <button onClick={handleBuyNow} className="btn btn-accent btn-sm product-card__buy-btn">
+            <FiZap size={14} /> Buy Now
+          </button>
+        </div>
       </div>
     </Link>
   );

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import { CartProvider } from "./context/CartContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -27,6 +28,7 @@ function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <CartProvider>
       <Toaster
         position="top-center"
         toastOptions={{
@@ -95,6 +97,7 @@ function App() {
         </Routes>
       </main>
       <Footer />
+      </CartProvider>
     </BrowserRouter>
   );
 }

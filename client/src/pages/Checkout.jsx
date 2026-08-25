@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiMapPin, FiCreditCard, FiPlus } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
 import toast from "react-hot-toast";
 import api from "../services/api";
 import "./Checkout.css";
@@ -18,8 +19,8 @@ const emptyAddress = {
 
 export default function Checkout() {
   const { user } = useAuth();
+  const { cart, loading: cartLoading } = useCart();
   const navigate = useNavigate();
-  const [cart, setCart] = useState(null);
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -29,13 +30,9 @@ export default function Checkout() {
   const [addressSaving, setAddressSaving] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchProfile = async () => {
       try {
-        const [cartRes, profileRes] = await Promise.all([
-          api.get("/cart"),
-          api.get("/users/profile"),
-        ]);
-        setCart(cartRes.data.cart);
+        const profileRes = await api.get("/users/profile");
         const addrs = profileRes.data.user?.address || [];
         setAddresses(addrs);
         const defaultAddr = addrs.find((a) => a.isDefault);
@@ -46,7 +43,7 @@ export default function Checkout() {
         setLoading(false);
       }
     };
-    fetchData();
+    fetchProfile();
   }, []);
 
   // ---------- address helpers ----------
@@ -209,7 +206,7 @@ export default function Checkout() {
 
   // ---------- render ----------
 
-  if (loading)
+  if (loading || cartLoading)
     return (
       <div className="loading-page">
         <div className="spinner" />

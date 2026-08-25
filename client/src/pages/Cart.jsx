@@ -1,47 +1,17 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+
+import { Link, useNavigate } from "react-router-dom";
 import { FiTrash2, FiMinus, FiPlus, FiShoppingBag } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
 import toast from "react-hot-toast";
-import api from "../services/api";
 import "./Cart.css";
 
 export default function Cart() {
   const { user } = useAuth();
-  const [cart, setCart] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { cart, loading, removeFromCart, updateQuantity } = useCart();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!user) return;
-    const fetchCart = async () => {
-      try {
-        const res = await api.get("/cart");
-        setCart(res.data.cart);
-      } catch { /* silent */ }
-      finally { setLoading(false); }
-    };
-    fetchCart();
-  }, [user]);
-
-  const updateQuantity = async (itemId, newQty) => {
-    try {
-      const res = await api.put(`/cart/${itemId}`, { quantity: newQty });
-      setCart(res.data.cart);
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to update");
-    }
-  };
-
-  const removeItem = async (itemId) => {
-    try {
-      const res = await api.delete(`/cart/${itemId}`);
-      setCart(res.data.cart);
-      toast.success("Removed from cart");
-    } catch {
-      toast.error("Failed to remove");
-    }
-  };
-
+  // Redirect to login if not authenticated
   if (!user) {
     return (
       <div className="page"><div className="container">
@@ -71,6 +41,23 @@ export default function Cart() {
     );
   }
 
+  const handleRemove = async (itemId) => {
+    try {
+      await removeFromCart(itemId);
+      toast.success("Removed from cart");
+    } catch {
+      toast.error("Failed to remove");
+    }
+  };
+
+  const handleQuantityChange = async (itemId, newQty) => {
+    try {
+      await updateQuantity(itemId, newQty);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to update");
+    }
+  };
+
   return (
     <div className="page">
       <div className="container">
@@ -96,18 +83,18 @@ export default function Cart() {
                   </div>
                 </div>
                 <div className="cart-item__qty">
-                  <button onClick={() => updateQuantity(item._id, item.quantity - 1)} disabled={item.quantity <= 1}>
+                  <button onClick={() => handleQuantityChange(item._id, item.quantity - 1)} disabled={item.quantity <= 1}>
                     <FiMinus size={14} />
                   </button>
                   <span>{item.quantity}</span>
-                  <button onClick={() => updateQuantity(item._id, item.quantity + 1)} disabled={item.quantity >= item.stock}>
+                  <button onClick={() => handleQuantityChange(item._id, item.quantity + 1)} disabled={item.quantity >= item.stock}>
                     <FiPlus size={14} />
                   </button>
                 </div>
                 <div className="cart-item__total">
                   ₹{((item.discountPrice > 0 && item.discountPrice < item.price ? item.discountPrice : item.price) * item.quantity).toLocaleString("en-IN")}
                 </div>
-                <button className="cart-item__remove" onClick={() => removeItem(item._id)}>
+                <button className="cart-item__remove" onClick={() => handleRemove(item._id)}>
                   <FiTrash2 size={16} />
                 </button>
               </div>
@@ -134,9 +121,9 @@ export default function Cart() {
               <span>Total</span>
               <span>₹{(cart.totalPrice + (cart.totalPrice >= 999 ? 0 : 99)).toLocaleString("en-IN")}</span>
             </div>
-            <Link to="/checkout" className="btn btn-primary btn-lg" style={{ width: "100%", marginTop: 16 }}>
+            <button className="btn btn-primary btn-lg" style={{ width: "100%", marginTop: 16 }} onClick={() => navigate("/checkout")}>
               Proceed to Checkout
-            </Link>
+            </button>
             <Link to="/shop" className="btn btn-ghost" style={{ width: "100%", marginTop: 8 }}>
               Continue Shopping
             </Link>

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { FiHeart, FiShoppingBag, FiMinus, FiPlus, FiTruck, FiRefreshCw, FiShield } from "react-icons/fi";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { FiHeart, FiShoppingBag, FiMinus, FiPlus, FiTruck, FiRefreshCw, FiShield, FiZap } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
 import ProductCard from "../components/ProductCard";
 import toast from "react-hot-toast";
 import api from "../services/api";
@@ -10,6 +11,8 @@ import "./ProductDetail.css";
 export default function ProductDetail() {
   const { slug } = useParams();
   const { user } = useAuth();
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,12 +41,18 @@ export default function ProductDetail() {
   const handleAddToCart = async () => {
     if (!user) { toast.error("Please sign in"); return; }
     try {
-      await api.post("/cart", {
-        productId: product._id,
-        quantity,
-        size: selectedSize,
-      });
+      await addToCart(product._id, quantity, selectedSize);
       toast.success("Added to cart");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to add to cart");
+    }
+  };
+
+  const handleBuyNow = async () => {
+    if (!user) { toast.error("Please sign in"); return; }
+    try {
+      await addToCart(product._id, quantity, selectedSize);
+      navigate("/checkout");
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to add to cart");
     }
@@ -192,6 +201,9 @@ export default function ProductDetail() {
                 <div className="product-detail__actions">
                   <button className="btn btn-primary btn-lg" onClick={handleAddToCart} style={{ flex: 1 }}>
                     <FiShoppingBag /> Add to Cart
+                  </button>
+                  <button className="btn btn-accent btn-lg product-detail__buy-now" onClick={handleBuyNow} style={{ flex: 1 }}>
+                    <FiZap /> Buy Now
                   </button>
                   <button className="btn btn-outline-accent btn-lg" onClick={handleAddToWishlist}>
                     <FiHeart size={20} />

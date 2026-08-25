@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
 import { FiSearch, FiHeart, FiShoppingBag, FiUser, FiMenu, FiX, FiLogOut, FiChevronDown } from "react-icons/fi";
 import api from "../services/api";
 import "./Navbar.css";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const { cartCount } = useCart();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
   const [wishlistCount, setWishlistCount] = useState(0);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const location = useLocation();
@@ -32,20 +33,16 @@ export default function Navbar() {
 
   useEffect(() => {
     if (!user) return;
-    const fetchCounts = async () => {
+    const fetchWishlistCount = async () => {
       try {
-        const [cartRes, wishRes] = await Promise.all([
-          api.get("/cart"),
-          api.get("/wishlist"),
-        ]);
-        setCartCount(cartRes.data.cart?.itemCount || 0);
+        const wishRes = await api.get("/wishlist");
         setWishlistCount(wishRes.data.wishlist?.products?.length || 0);
       } catch {
         // silent
       }
     };
-    fetchCounts();
-    const interval = setInterval(fetchCounts, 30000);
+    fetchWishlistCount();
+    const interval = setInterval(fetchWishlistCount, 30000);
     return () => clearInterval(interval);
   }, [user]);
 
