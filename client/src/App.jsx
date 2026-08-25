@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { CartProvider } from "./context/CartContext";
+import { WishlistProvider } from "./context/WishlistContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -29,6 +30,7 @@ function App() {
     <BrowserRouter>
       <ScrollToTop />
       <CartProvider>
+      <WishlistProvider>
       <Toaster
         position="top-center"
         toastOptions={{
@@ -97,6 +99,7 @@ function App() {
         </Routes>
       </main>
       <Footer />
+      </WishlistProvider>
       </CartProvider>
     </BrowserRouter>
   );

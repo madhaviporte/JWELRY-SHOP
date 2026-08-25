@@ -2,14 +2,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiHeart, FiShoppingBag, FiZap } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 import toast from "react-hot-toast";
-import api from "../services/api";
 import "./ProductCard.css";
 
 export default function ProductCard({ product, onWishlistChange }) {
   const { user } = useAuth();
   const { addToCart } = useCart();
+  const { isWishlisted, toggleWishlist } = useWishlist();
   const navigate = useNavigate();
+  const liked = isWishlisted(product._id);
 
   const handleAddToWishlist = async (e) => {
     e.preventDefault();
@@ -19,8 +21,8 @@ export default function ProductCard({ product, onWishlistChange }) {
       return;
     }
     try {
-      const res = await api.post("/wishlist/toggle", { productId: product._id });
-      if (res.data.action === "added") {
+      const res = await toggleWishlist(product._id);
+      if (res.action === "added") {
         toast.success("Added to wishlist");
       } else {
         toast.success("Removed from wishlist");
@@ -82,7 +84,7 @@ export default function ProductCard({ product, onWishlistChange }) {
         {product.newArrival && <span className="product-card__new-badge">New</span>}
         <div className="product-card__actions">
           <button onClick={handleAddToWishlist} className="product-card__action-btn" aria-label="Add to wishlist">
-            <FiHeart size={18} />
+            <FiHeart size={18} fill={liked ? "currentColor" : "none"} color={liked ? "var(--color-accent, #e74c7a)" : undefined} />
           </button>
           <button onClick={handleAddToCart} className="product-card__action-btn product-card__action-btn--primary" aria-label="Add to cart">
             <FiShoppingBag size={18} />

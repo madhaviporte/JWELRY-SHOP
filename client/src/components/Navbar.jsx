@@ -2,18 +2,18 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 import { FiSearch, FiHeart, FiShoppingBag, FiUser, FiMenu, FiX, FiLogOut, FiChevronDown } from "react-icons/fi";
-import api from "../services/api";
 import "./Navbar.css";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const { cartCount } = useCart();
+  const { wishlistCount } = useWishlist();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled] = useState(false);
-  const [wishlistCount, setWishlistCount] = useState(0);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -31,20 +31,7 @@ export default function Navbar() {
     setUserMenuOpen(false);
   }, [location.pathname]);
 
-  useEffect(() => {
-    if (!user) return;
-    const fetchWishlistCount = async () => {
-      try {
-        const wishRes = await api.get("/wishlist");
-        setWishlistCount(wishRes.data.wishlist?.products?.length || 0);
-      } catch {
-        // silent
-      }
-    };
-    fetchWishlistCount();
-    const interval = setInterval(fetchWishlistCount, 30000);
-    return () => clearInterval(interval);
-  }, [user]);
+
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -63,7 +50,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={`navbar ${scrolled ? "navbar--scrolled" : ""} ${mobileOpen ? "navbar--menu-open" : ""}`}>
+      <nav className={`navbar ${scrolled ? "navbar--scrolled" : ""} ${mobileOpen ? "navbar--menu-open" : ""} ${userMenuOpen ? "navbar--dropdown-open" : ""}`}>
         <div className="navbar__container">
           <button className="navbar__hamburger" onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? <FiX size={24} /> : <FiMenu size={24} />}

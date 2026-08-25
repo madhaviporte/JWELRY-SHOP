@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { FiHeart, FiShoppingBag, FiMinus, FiPlus, FiTruck, FiRefreshCw, FiShield, FiZap } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 import ProductCard from "../components/ProductCard";
 import toast from "react-hot-toast";
 import api from "../services/api";
@@ -12,6 +13,7 @@ export default function ProductDetail() {
   const { slug } = useParams();
   const { user } = useAuth();
   const { addToCart } = useCart();
+  const { isWishlisted, toggleWishlist } = useWishlist();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
@@ -21,6 +23,7 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [reviewForm, setReviewForm] = useState({ rating: 5, comment: "" });
   const [activeTab, setActiveTab] = useState("description");
+  const liked = product ? isWishlisted(product._id) : false;
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -61,8 +64,8 @@ export default function ProductDetail() {
   const handleAddToWishlist = async () => {
     if (!user) { toast.error("Please sign in"); return; }
     try {
-      const res = await api.post("/wishlist/toggle", { productId: product._id });
-      toast.success(res.data.action === "added" ? "Added to wishlist" : "Removed from wishlist");
+      const res = await toggleWishlist(product._id);
+      toast.success(res.action === "added" ? "Added to wishlist" : "Removed from wishlist");
     } catch {
       toast.error("Failed to update wishlist");
     }
@@ -206,7 +209,7 @@ export default function ProductDetail() {
                     <FiZap /> Buy Now
                   </button>
                   <button className="btn btn-outline-accent btn-lg" onClick={handleAddToWishlist}>
-                    <FiHeart size={20} />
+                    <FiHeart size={20} fill={liked ? "currentColor" : "none"} color={liked ? "var(--color-accent, #e74c7a)" : undefined} />
                   </button>
                 </div>
               </>

@@ -1,20 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { FiHeart } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
+import { useWishlist } from "../context/WishlistContext";
 import ProductCard from "../components/ProductCard";
 
 import api from "../services/api";
 
 export default function Wishlist() {
   const { user } = useAuth();
-  const [products, setProducts] = useState([]);
+  const { wishlistIds } = useWishlist();
+  const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchWishlist = async () => {
     try {
       const res = await api.get("/wishlist");
-      setProducts(res.data.wishlist?.products || []);
+      setAllProducts(res.data.wishlist?.products || []);
     } catch { /* silent */ }
     finally { setLoading(false); }
   };
@@ -23,6 +25,11 @@ export default function Wishlist() {
     if (!user) { setLoading(false); return; }
     fetchWishlist();
   }, [user]);
+
+  const products = useMemo(
+    () => allProducts.filter((p) => wishlistIds.has(p._id)),
+    [allProducts, wishlistIds]
+  );
 
   if (!user) {
     return (
