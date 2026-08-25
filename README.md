@@ -1,4 +1,4 @@
-# ✨ Lumiere
+# ✨ Elora
 
 A full-stack jewelry e-commerce website built with React, Node.js, Express, and MongoDB.
 
