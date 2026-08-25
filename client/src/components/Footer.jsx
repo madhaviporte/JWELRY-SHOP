@@ -11,7 +11,7 @@ export default function Footer() {
             <div className="footer__brand">
               <Link to="/" className="footer__logo">
                 <span className="footer__logo-icon">✦</span>
-                <span className="footer__logo-text">Lumière</span>
+                <span className="footer__logo-text">Elora</span>
               </Link>
               <p className="footer__tagline">
                 Exquisite jewellery crafted with passion. Timeless elegance for every occasion.
@@ -55,15 +55,15 @@ export default function Footer() {
               <h4>Contact</h4>
               <div className="footer__contact-item">
                 <FiMapPin size={14} />
-                <span>Mumbai, Maharashtra, India</span>
+                <span>Bilaspur, Chattisghar, India</span>
               </div>
               <div className="footer__contact-item">
                 <FiPhone size={14} />
-                <span>+91 98765 43210</span>
+                <span>+91 7354155582</span>
               </div>
               <div className="footer__contact-item">
                 <FiMail size={14} />
-                <span>hello@lumiere.in</span>
+                <span>hello@elora.in</span>
               </div>
             </div>
           </div>
@@ -73,7 +73,7 @@ export default function Footer() {
       <div className="footer__bottom">
         <div className="container">
           <div className="footer__bottom-content">
-            <p>© {new Date().getFullYear()} Lumière Jewellery. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Elora Jewellery. All rights reserved.</p>
             <div className="footer__bottom-links">
               <a href="#">Privacy Policy</a>
               <a href="#">Terms of Service</a>

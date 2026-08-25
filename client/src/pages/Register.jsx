@@ -35,7 +35,7 @@ export default function Register() {
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-header">
-          <Link to="/" className="auth-logo"><span>✦</span> Lumière</Link>
+          <Link to="/" className="auth-logo"><span>✦</span> Elora</Link>
           <h1>Create Account</h1>
           <p>Join us for an exclusive jewellery experience</p>
         </div>

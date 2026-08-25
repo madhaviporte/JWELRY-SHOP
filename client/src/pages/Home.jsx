@@ -204,7 +204,7 @@ export default function Home() {
       <section className="section why-section">
         <div className="container">
           <div className="section-title">
-            <h2>Why Choose Lumière</h2>
+            <h2>Why Choose Elora</h2>
             <div className="accent-line" />
           </div>
           <div className="why-grid">

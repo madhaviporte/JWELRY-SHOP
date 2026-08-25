@@ -130,7 +130,7 @@ export default function Checkout() {
         key: keyId,
         amount: order.amount,
         currency: order.currency,
-        name: "Lumière Jewellery",
+        name: "Elora Jewellery",
         description: "Order Payment",
         order_id: order.id,
         handler: async function (response) {

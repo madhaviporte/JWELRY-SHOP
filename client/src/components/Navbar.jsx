@@ -63,7 +63,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={`navbar ${scrolled ? "navbar--scrolled" : ""}`}>
+      <nav className={`navbar ${scrolled ? "navbar--scrolled" : ""} ${mobileOpen ? "navbar--menu-open" : ""}`}>
         <div className="navbar__container">
           <button className="navbar__hamburger" onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? <FiX size={24} /> : <FiMenu size={24} />}
@@ -71,13 +71,14 @@ export default function Navbar() {
 
           <Link to="/" className="navbar__logo">
             <span className="navbar__logo-icon">✦</span>
-            <span className="navbar__logo-text">Lumière</span>
+            <span className="navbar__logo-text">Elora</span>
           </Link>
 
-          <div className={`navbar__links ${mobileOpen ? "navbar__links--open" : ""}`}>
+          {/* Desktop links */}
+          <div className="navbar__links navbar__links--desktop">
             <Link to="/" className={`navbar__link ${location.pathname === "/" ? "active" : ""}`}>Home</Link>
-            <Link to="/shop" className={`navbar__link ${location.pathname.startsWith("/shop") ? "active" : ""}`}>Shop</Link>
-            <Link to="/shop?featured=true" className="navbar__link">Collections</Link>
+            <Link to="/shop" className={`navbar__link ${location.pathname.startsWith("/shop") && !location.search.includes("featured=true") ? "active" : ""}`}>Shop</Link>
+            <Link to="/shop?featured=true" className={`navbar__link ${location.pathname === "/shop" && location.search.includes("featured=true") ? "active" : ""}`}>Collections</Link>
             {user?.role === "admin" && (
               <Link to="/admin" className={`navbar__link ${location.pathname.startsWith("/admin") ? "active" : ""}`}>Admin</Link>
             )}
@@ -144,7 +145,17 @@ export default function Navbar() {
         )}
       </nav>
 
-      {/* Mobile Overlay */}
+      {/* Mobile drawer — outside <nav> for proper z-index stacking */}
+      <div className={`navbar__drawer ${mobileOpen ? "navbar__drawer--open" : ""}`}>
+        <Link to="/" className={`navbar__link ${location.pathname === "/" ? "active" : ""}`}>Home</Link>
+        <Link to="/shop" className={`navbar__link ${location.pathname.startsWith("/shop") && !location.search.includes("featured=true") ? "active" : ""}`}>Shop</Link>
+        <Link to="/shop?featured=true" className={`navbar__link ${location.pathname === "/shop" && location.search.includes("featured=true") ? "active" : ""}`}>Collections</Link>
+        {user?.role === "admin" && (
+          <Link to="/admin" className={`navbar__link ${location.pathname.startsWith("/admin") ? "active" : ""}`}>Admin</Link>
+        )}
+      </div>
+
+      {/* Mobile Overlay — outside <nav> for proper z-index stacking */}
       {mobileOpen && <div className="navbar__overlay" onClick={() => setMobileOpen(false)} />}
       {userMenuOpen && <div className="navbar__overlay" onClick={() => setUserMenuOpen(false)} />}
     </>
