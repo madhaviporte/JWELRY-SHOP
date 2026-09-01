@@ -23,9 +23,8 @@ app.use(helmet());
 
 // CORS — support multiple origins (local dev + production)
 const defaultAllowedOrigins = [
-  "http://localhost:5173",
-  "http://127.0.0.1:5173",
-  "https://jwelry-shop-alpha.vercel.app",
+  "http://localhost:5176",
+  "http://127.0.0.1:5176",
 ];
 const envOrigins = process.env.CLIENT_URL
   ? process.env.CLIENT_URL.split(",").map((o) => o.trim())

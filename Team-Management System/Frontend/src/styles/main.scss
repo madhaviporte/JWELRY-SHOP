@@ -1,0 +1,1383 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+// ============================================
+// LOGIN PAGE
+// ============================================
+
+.login-page {
+  @include flex-center;
+  min-height: 100vh;
+  padding: $spacing-lg;
+  background: linear-gradient(135deg, $primary-light 0%, $background-color 100%);
+
+  &__container {
+    @include card;
+    width: 100%;
+    max-width: 420px;
+    padding: $spacing-2xl;
+  }
+
+  &__header {
+    text-align: center;
+    margin-bottom: $spacing-xl;
+  }
+
+  &__logo {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    color: $primary-color;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__subtitle {
+    color: $text-muted;
+    font-size: $font-size-sm;
+  }
+
+  &__form {
+    @include flex-column;
+    gap: $spacing-lg;
+  }
+
+  &__error {
+    background-color: $danger-light;
+    color: $danger-color;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $radius-md;
+    font-size: $font-size-sm;
+    text-align: center;
+  }
+
+  &__demo {
+    margin-top: $spacing-xl;
+    padding-top: $spacing-lg;
+    border-top: 1px solid $border-color;
+    text-align: center;
+  }
+
+  &__demo-title {
+    font-size: $font-size-sm;
+    font-weight: 600;
+    color: $text-muted;
+    margin-bottom: $spacing-md;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__demo-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-xs 0;
+    font-size: $font-size-sm;
+    color: $text-color;
+
+    code {
+      background: $background-color;
+      padding: 2px $spacing-sm;
+      border-radius: $radius-sm;
+      font-size: $font-size-xs;
+      color: $primary-color;
+    }
+  }
+
+  &__demo-label {
+    font-weight: 500;
+    min-width: 60px;
+    text-align: left;
+  }
+}
+
+// ============================================
+// FORM ELEMENTS
+// ============================================
+
+.form-group {
+  @include flex-column;
+  gap: $spacing-xs;
+
+  &__label {
+    font-size: $font-size-sm;
+    font-weight: 500;
+    color: $text-color;
+  }
+
+  &__input {
+    @include input-base;
+  }
+
+  &__select {
+    @include input-base;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right $spacing-md center;
+    padding-right: $spacing-2xl;
+  }
+
+  &__textarea {
+    @include input-base;
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  &__error-text {
+    font-size: $font-size-xs;
+    color: $danger-color;
+  }
+}
+
+.btn {
+  @include btn-primary;
+
+  &--danger {
+    @include btn-danger;
+  }
+
+  &--outline {
+    @include btn-outline;
+  }
+
+  &--secondary {
+    @include btn-secondary;
+  }
+
+  &--sm {
+    padding: $spacing-xs $spacing-md;
+    font-size: $font-size-xs;
+  }
+
+  &--full {
+    width: 100%;
+  }
+
+  &--loading {
+    position: relative;
+    color: transparent;
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ============================================
+// LAYOUT
+// ============================================
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+
+  &__main {
+    flex: 1;
+    margin-left: $sidebar-width;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    @include respond-to(md) {
+      margin-left: 0;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    padding: $spacing-xl;
+    padding-top: calc($navbar-height + $spacing-xl);
+    overflow-y: auto;
+
+    @include respond-to(md) {
+      padding: $spacing-lg;
+      padding-top: calc($navbar-height + $spacing-lg);
+    }
+
+    @include respond-to(sm) {
+      padding: $spacing-md;
+      padding-top: calc($navbar-height + $spacing-md);
+    }
+  }
+}
+
+// ============================================
+// SIDEBAR
+// ============================================
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: $sidebar-width;
+  height: 100vh;
+  background-color: $card-bg;
+  border-right: 1px solid $border-color;
+  @include flex-column;
+  z-index: 100;
+  transition: transform $transition-normal;
+
+  @include respond-to(md) {
+    transform: translateX(-100%);
+
+    &.sidebar--open {
+      transform: translateX(0);
+    }
+  }
+
+  &__logo {
+    padding: $spacing-lg;
+    border-bottom: 1px solid $border-color;
+
+    &-brand {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+
+      svg {
+        color: $primary-color;
+        flex-shrink: 0;
+      }
+    }
+
+    h2 {
+      font-size: $font-size-xl;
+      color: $primary-color;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    span {
+      font-size: $font-size-xs;
+      color: $text-muted;
+    }
+  }
+
+  &__nav {
+    flex: 1;
+    padding: $spacing-md 0;
+    overflow: hidden;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: 12px $spacing-lg;
+    color: $text-muted;
+    font-size: $font-size-sm;
+    font-weight: 500;
+    transition: all $transition-fast;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    text-decoration: none;
+    border-left: 3px solid transparent;
+
+    &:hover {
+      color: $primary-color;
+      background-color: $primary-light;
+    }
+
+    &--active {
+      color: $primary-color;
+      background-color: $primary-light;
+      border-left-color: $primary-color;
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+  }
+
+  &__footer {
+    padding: $spacing-md $spacing-lg;
+    border-top: 1px solid $border-color;
+
+    &-user {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+      cursor: pointer;
+    }
+
+    &-info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      flex: 1;
+
+      span:first-child {
+        font-size: $font-size-sm;
+        font-weight: 500;
+        color: $text-color;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      &-role {
+        font-size: $font-size-xs;
+        color: $text-muted;
+        text-transform: capitalize;
+      }
+    }
+
+    &-chevron {
+      color: $text-muted;
+      flex-shrink: 0;
+    }
+  }
+
+  &__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: $primary-light;
+    color: $primary-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: $font-size-sm;
+    flex-shrink: 0;
+  }
+
+  &__link--logout {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: 10px $spacing-lg;
+    color: $text-muted;
+    font-size: $font-size-sm;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    transition: all $transition-fast;
+
+    &:hover {
+      color: $danger-color;
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+  }
+
+  &__overlay {
+    display: none;
+
+    @include respond-to(md) {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 99;
+    }
+  }
+}
+
+// ============================================
+// NAVBAR
+// ============================================
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: $sidebar-width;
+  right: 0;
+  height: $navbar-height;
+  background-color: $card-bg;
+  border-bottom: 1px solid $border-color;
+  @include flex-between;
+  padding: 0 $spacing-xl;
+  z-index: 50;
+
+  @include respond-to(md) {
+    left: 0;
+    padding: 0 $spacing-lg;
+  }
+
+  &__left {
+    @include flex-center;
+    gap: $spacing-md;
+  }
+
+  &__menu-btn {
+    display: none;
+    @include btn-outline;
+    padding: $spacing-xs;
+
+    @include respond-to(md) {
+      display: flex;
+    }
+  }
+
+  &__title {
+    font-size: $font-size-lg;
+    font-weight: 600;
+    color: $text-color;
+  }
+
+  &__right {
+    @include flex-center;
+    gap: $spacing-md;
+  }
+
+  &__search {
+    position: relative;
+
+    input {
+      @include input-base;
+      width: 280px;
+      padding-left: $spacing-2xl;
+
+      @include respond-to(lg) {
+        width: 200px;
+      }
+
+      @include respond-to(sm) {
+        display: none;
+      }
+    }
+
+    svg {
+      position: absolute;
+      left: $spacing-md;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: $text-light;
+    }
+  }
+
+  &__user {
+    @include flex-center;
+    gap: $spacing-sm;
+    cursor: pointer;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $radius-md;
+    transition: background-color $transition-fast;
+
+    &:hover {
+      background-color: $background-color;
+    }
+  }
+
+  &__avatar {
+    @include avatar(36px);
+  }
+
+  &__user-info {
+    @include flex-column;
+
+    @include respond-to(sm) {
+      display: none;
+    }
+
+    span:first-child {
+      font-size: $font-size-sm;
+      font-weight: 500;
+      color: $text-color;
+    }
+
+    span:last-child {
+      font-size: $font-size-xs;
+      color: $text-muted;
+      text-transform: capitalize;
+    }
+  }
+
+  &__logout {
+    @include btn-outline;
+    padding: $spacing-xs $spacing-md;
+
+    @include respond-to(sm) {
+      padding: $spacing-xs;
+      span { display: none; }
+    }
+  }
+}
+
+// ============================================
+// DASHBOARD
+// ============================================
+
+.dashboard {
+  &__header {
+    margin-bottom: $spacing-xl;
+
+    h1 {
+      font-size: $font-size-2xl;
+      color: $text-color;
+      margin-bottom: $spacing-xs;
+    }
+
+    p {
+      color: $text-muted;
+      font-size: $font-size-sm;
+    }
+  }
+
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: $spacing-lg;
+    margin-bottom: $spacing-xl;
+  }
+
+  &__stat-card {
+    @include card;
+    @include flex-column;
+    gap: $spacing-sm;
+
+    &-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: $radius-lg;
+      @include flex-center;
+
+      &--blue {
+        background-color: $info-light;
+        color: $info-color;
+      }
+
+      &--green {
+        background-color: $success-light;
+        color: $success-color;
+      }
+
+      &--yellow {
+        background-color: $warning-light;
+        color: $warning-color;
+      }
+
+      &--red {
+        background-color: $danger-light;
+        color: $danger-color;
+      }
+
+      &--purple {
+        background-color: $primary-light;
+        color: $primary-color;
+      }
+    }
+
+    &-value {
+      font-size: $font-size-2xl;
+      font-weight: 700;
+      color: $text-color;
+    }
+
+    &-label {
+      font-size: $font-size-sm;
+      color: $text-muted;
+    }
+  }
+
+  &__section {
+    @include card;
+
+    &-header {
+      @include flex-between;
+      margin-bottom: $spacing-lg;
+
+      h2 {
+        font-size: $font-size-lg;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// ============================================
+// TEAM PAGE
+// ============================================
+
+.team-page {
+  &__header {
+    @include flex-between;
+    margin-bottom: $spacing-xl;
+    flex-wrap: wrap;
+    gap: $spacing-md;
+
+    h1 {
+      font-size: $font-size-2xl;
+    }
+  }
+
+  &__filters {
+    @include flex-center;
+    gap: $spacing-md;
+    flex-wrap: wrap;
+  }
+
+  &__search {
+    position: relative;
+
+    input {
+      @include input-base;
+      width: 300px;
+      padding-left: $spacing-2xl;
+
+      @include respond-to(sm) {
+        width: 100%;
+      }
+    }
+
+    svg {
+      position: absolute;
+      left: $spacing-md;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: $text-light;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: $spacing-lg;
+
+    @include respond-to(sm) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    padding: $spacing-2xl;
+    color: $text-muted;
+
+    svg {
+      width: 48px;
+      height: 48px;
+      margin-bottom: $spacing-md;
+      opacity: 0.5;
+    }
+  }
+}
+
+// ============================================
+// TEAM MEMBER CARD
+// ============================================
+
+.member-card {
+  @include card;
+  transition: box-shadow $transition-fast, transform $transition-fast;
+
+  &:hover {
+    box-shadow: $shadow-md;
+    transform: translateY(-2px);
+  }
+
+  &__header {
+    @include flex-center;
+    gap: $spacing-md;
+    margin-bottom: $spacing-lg;
+  }
+
+  &__avatar {
+    @include avatar(48px);
+  }
+
+  &__info {
+    @include flex-column;
+    flex: 1;
+
+    &-name {
+      font-size: $font-size-base;
+      font-weight: 600;
+      color: $text-color;
+    }
+
+    &-position {
+      font-size: $font-size-sm;
+      color: $text-muted;
+    }
+  }
+
+  &__details {
+    @include flex-column;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-lg;
+    padding-bottom: $spacing-lg;
+    border-bottom: 1px solid $border-color;
+  }
+
+  &__detail {
+    @include flex-center;
+    gap: $spacing-sm;
+    font-size: $font-size-sm;
+    color: $text-muted;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+  }
+
+  &__skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-xs;
+    margin-bottom: $spacing-lg;
+  }
+
+  &__skill {
+    padding: $spacing-xs $spacing-sm;
+    background-color: $primary-light;
+    color: $primary-color;
+    border-radius: $radius-sm;
+    font-size: $font-size-xs;
+    font-weight: 500;
+  }
+
+  &__actions {
+    @include flex-center;
+    gap: $spacing-sm;
+
+    .btn {
+      flex: 1;
+    }
+  }
+}
+
+// ============================================
+// MEMBER DETAILS PAGE
+// ============================================
+
+.member-details {
+  &__back {
+    @include btn-outline;
+    margin-bottom: $spacing-xl;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &__profile {
+    @include card;
+    margin-bottom: $spacing-xl;
+  }
+
+  &__header {
+    @include flex-center;
+    gap: $spacing-xl;
+    margin-bottom: $spacing-xl;
+    padding-bottom: $spacing-xl;
+    border-bottom: 1px solid $border-color;
+
+    @include respond-to(sm) {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+
+  &__avatar {
+    @include avatar(80px);
+    font-size: $font-size-2xl;
+  }
+
+  &__name {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    color: $text-color;
+    margin-bottom: $spacing-xs;
+  }
+
+  &__position {
+    font-size: $font-size-base;
+    color: $text-muted;
+  }
+
+  &__info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: $spacing-lg;
+  }
+
+  &__info-item {
+    @include flex-column;
+    gap: $spacing-xs;
+
+    &-label {
+      font-size: $font-size-xs;
+      font-weight: 500;
+      color: $text-muted;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    &-value {
+      font-size: $font-size-sm;
+      color: $text-color;
+    }
+  }
+
+  &__skills-section {
+    margin-top: $spacing-lg;
+    padding-top: $spacing-lg;
+    border-top: 1px solid $border-color;
+  }
+
+  &__tasks-section {
+    @include card;
+  }
+
+  &__section-header {
+    @include flex-between;
+    margin-bottom: $spacing-lg;
+
+    h2 {
+      font-size: $font-size-xl;
+    }
+  }
+
+  &__tasks-list {
+    @include flex-column;
+    gap: $spacing-md;
+  }
+}
+
+// ============================================
+// TASK CARD
+// ============================================
+
+.task-card {
+  @include card;
+  padding: $spacing-lg;
+
+  &__header {
+    @include flex-between;
+    margin-bottom: $spacing-sm;
+    gap: $spacing-sm;
+  }
+
+  &__title {
+    font-size: $font-size-base;
+    font-weight: 600;
+    color: $text-color;
+    flex: 1;
+  }
+
+  &__description {
+    font-size: $font-size-sm;
+    color: $text-muted;
+    margin-bottom: $spacing-md;
+    line-height: 1.6;
+  }
+
+  &__meta {
+    @include flex-center;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-md;
+  }
+
+  &__meta-item {
+    @include flex-center;
+    gap: $spacing-xs;
+    font-size: $font-size-xs;
+    color: $text-muted;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  &__footer {
+    @include flex-between;
+    padding-top: $spacing-md;
+    border-top: 1px solid $border-color;
+
+    @include respond-to(sm) {
+      flex-direction: column;
+      gap: $spacing-sm;
+      align-items: flex-start;
+    }
+  }
+
+  &__assigned {
+    @include flex-center;
+    gap: $spacing-sm;
+
+    &-avatar {
+      @include avatar(24px);
+      font-size: $font-size-xs;
+    }
+
+    &-name {
+      font-size: $font-size-sm;
+      color: $text-color;
+    }
+  }
+
+  &__actions {
+    @include flex-center;
+    gap: $spacing-sm;
+  }
+
+  &__status-select {
+    @include input-base;
+    width: auto;
+    padding: $spacing-xs $spacing-md;
+    padding-right: $spacing-2xl;
+    font-size: $font-size-xs;
+    min-width: 130px;
+  }
+}
+
+// ============================================
+// TASKS PAGE
+// ============================================
+
+.tasks-page {
+  &__header {
+    @include flex-between;
+    margin-bottom: $spacing-xl;
+    flex-wrap: wrap;
+    gap: $spacing-md;
+
+    h1 {
+      font-size: $font-size-2xl;
+    }
+  }
+
+  &__filters {
+    @include flex-center;
+    gap: $spacing-md;
+    margin-bottom: $spacing-xl;
+    flex-wrap: wrap;
+
+    select {
+      @include input-base;
+      width: auto;
+      min-width: 150px;
+      padding: $spacing-sm $spacing-2xl $spacing-sm $spacing-md;
+      font-size: $font-size-sm;
+    }
+  }
+
+  &__list {
+    @include flex-column;
+    gap: $spacing-md;
+  }
+}
+
+// ============================================
+// STATUS BADGE
+// ============================================
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: 500;
+
+  &--pending {
+    background-color: $warning-light;
+    color: $warning-color;
+  }
+
+  &--in-progress {
+    background-color: $info-light;
+    color: $info-color;
+  }
+
+  &--completed {
+    background-color: $success-light;
+    color: $success-color;
+  }
+
+  &__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+  }
+}
+
+// ============================================
+// PRIORITY BADGE
+// ============================================
+
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: 500;
+
+  &--low {
+    background-color: $success-light;
+    color: $priority-low;
+  }
+
+  &--medium {
+    background-color: $warning-light;
+    color: $priority-medium;
+  }
+
+  &--high {
+    background-color: $danger-light;
+    color: $priority-high;
+  }
+}
+
+// ============================================
+// MODAL
+// ============================================
+
+.modal-overlay {
+  @include modal-overlay;
+}
+
+.modal {
+  background-color: $card-bg;
+  border-radius: $radius-lg;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  @include scrollbar;
+
+  @include respond-to(sm) {
+    max-width: 100%;
+    margin: $spacing-md;
+  }
+
+  &__header {
+    @include flex-between;
+    padding: $spacing-lg;
+    border-bottom: 1px solid $border-color;
+
+    h2 {
+      font-size: $font-size-lg;
+    }
+
+    &-close {
+      @include btn-outline;
+      padding: $spacing-xs;
+      border: none;
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  &__body {
+    padding: $spacing-lg;
+  }
+
+  &__footer {
+    @include flex-center;
+    justify-content: flex-end;
+    gap: $spacing-sm;
+    padding: $spacing-lg;
+    border-top: 1px solid $border-color;
+  }
+}
+
+// ============================================
+// LOADING & EMPTY STATES
+// ============================================
+
+.loading {
+  @include flex-center;
+  padding: $spacing-2xl;
+
+  &__spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid $border-color;
+    border-top-color: $primary-color;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  &__text {
+    margin-top: $spacing-md;
+    color: $text-muted;
+    font-size: $font-size-sm;
+  }
+
+  &--full {
+    min-height: 300px;
+    @include flex-column;
+    align-items: center;
+  }
+}
+
+.empty-state {
+  @include flex-column;
+  align-items: center;
+  padding: $spacing-2xl;
+  text-align: center;
+
+  &__icon {
+    width: 64px;
+    height: 64px;
+    color: $text-light;
+    margin-bottom: $spacing-md;
+  }
+
+  &__title {
+    font-size: $font-size-lg;
+    font-weight: 600;
+    color: $text-color;
+    margin-bottom: $spacing-xs;
+  }
+
+  &__text {
+    font-size: $font-size-sm;
+    color: $text-muted;
+    max-width: 400px;
+  }
+}
+
+// ============================================
+// NOT FOUND PAGE
+// ============================================
+
+.not-found {
+  @include flex-center;
+  @include flex-column;
+  min-height: 100vh;
+  text-align: center;
+  padding: $spacing-xl;
+
+  &__title {
+    font-size: 6rem;
+    font-weight: 700;
+    color: $primary-color;
+    line-height: 1;
+  }
+
+  &__subtitle {
+    font-size: $font-size-xl;
+    color: $text-color;
+    margin: $spacing-md 0;
+  }
+
+  &__text {
+    color: $text-muted;
+    margin-bottom: $spacing-xl;
+  }
+}
+
+// ============================================
+// AUTH ERROR DISPLAY
+// ============================================
+
+.auth-error {
+  background-color: $danger-light;
+  color: $danger-color;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  text-align: center;
+  margin-bottom: $spacing-md;
+}
+
+// ============================================
+// PROFILE PAGE
+// ============================================
+
+.profile-page {
+  max-width: 640px;
+
+  &__header {
+    margin-bottom: $spacing-xl;
+
+    h1 {
+      font-size: $font-size-2xl;
+      color: $text-color;
+      margin-bottom: $spacing-xs;
+    }
+
+    p {
+      color: $text-muted;
+      font-size: $font-size-sm;
+    }
+  }
+
+  &__card {
+    @include card;
+    padding: $spacing-xl;
+  }
+
+  &__fields {
+    @include flex-column;
+    gap: $spacing-lg;
+  }
+
+  &__role {
+    @include flex-column;
+    gap: $spacing-xs;
+    padding: $spacing-sm $spacing-md;
+    background-color: $background-color;
+    border: 1px solid $border-color;
+    border-radius: $radius-md;
+
+    &-value {
+      font-size: $font-size-sm;
+      font-weight: 600;
+      color: $text-color;
+    }
+
+    &-hint {
+      font-size: $font-size-xs;
+      color: $text-light;
+    }
+  }
+
+  &__actions {
+    margin-top: $spacing-xl;
+    padding-top: $spacing-lg;
+    border-top: 1px solid $border-color;
+  }
+
+  &__success {
+    background-color: $success-light;
+    color: $success-color;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $radius-md;
+    font-size: $font-size-sm;
+    text-align: center;
+    margin-bottom: $spacing-md;
+  }
+}
+
+.form-group__hint {
+  font-size: $font-size-xs;
+  color: $text-light;
+  margin-top: $spacing-xs;
+}
+
+// ============================================
+// DASHBOARD RECENT TASKS
+// ============================================
+
+.dashboard__task-list {
+  @include flex-column;
+  gap: $spacing-sm;
+}
+
+.dashboard__task-item {
+  @include flex-between;
+  padding: $spacing-sm $spacing-md;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.dashboard__task-info {
+  flex: 1;
+  min-width: 200px;
+
+  &-title {
+    font-weight: 500;
+    font-size: $font-size-sm;
+    margin-bottom: 2px;
+  }
+
+  &-meta {
+    font-size: $font-size-xs;
+    color: $text-muted;
+  }
+}
+
+// ============================================
+// MODAL FORM GRID
+// ============================================
+
+.modal-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-md;
+}
+
+.modal-form-stack {
+  @include flex-column;
+  gap: $spacing-md;
+}
+
+.modal-form-footer {
+  padding: 0;
+  margin-top: $spacing-md;
+  border: none;
+}
+
+// ============================================
+// DELETE CONFIRMATION MODAL
+// ============================================
+
+.modal--confirm {
+  max-width: 400px;
+}
+
+.modal__confirm-text {
+  font-size: $font-size-sm;
+  color: $text-muted;
+}
+
+// ============================================
+// MEMBER DETAILS SKILLS
+// ============================================
+
+.member-details__skills-label {
+  display: block;
+  margin-bottom: $spacing-sm;
+}
+
+.member-details__skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+}
+
+// ============================================
+// MEMBER DETAILS TASK CARDS
+// ============================================
+
+.member-details__task-item {
+  margin-bottom: $spacing-sm;
+}
