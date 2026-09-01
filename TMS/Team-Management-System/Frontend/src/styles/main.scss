@@ -1,0 +1,1162 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+@use 'reset';
+@use 'sass:color';
+
+// ============================================
+// AUTH / LOGIN
+// ============================================
+.login {
+  @include flex-center;
+  min-height: 100vh;
+  padding: $spacing-lg;
+  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+
+  &__card {
+    @include card;
+    width: 100%;
+    max-width: 420px;
+    padding: $spacing-2xl;
+  }
+
+  &__title {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    color: $text-color;
+    text-align: center;
+    margin-bottom: $spacing-xs;
+  }
+
+  &__subtitle {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+    text-align: center;
+    margin-bottom: $spacing-xl;
+  }
+
+  &__form {
+    @include flex-column;
+    gap: $spacing-md;
+  }
+
+  &__field {
+    @include flex-column;
+    gap: $spacing-xs;
+
+    label {
+      font-size: $font-size-sm;
+      font-weight: 500;
+      color: $text-color;
+    }
+
+    input {
+      @include input-base;
+      padding: 10px $spacing-md;
+    }
+  }
+
+  &__error {
+    background: #fef2f2;
+    color: $danger-color;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $radius-md;
+    font-size: $font-size-sm;
+    border: 1px solid #fecaca;
+  }
+
+  &__btn {
+    @include button-base;
+    width: 100%;
+    padding: 10px;
+    background: $primary-color;
+    color: white;
+    font-size: $font-size-base;
+    font-weight: 600;
+    margin-top: $spacing-sm;
+
+    &:hover:not(:disabled) {
+      background: $primary-hover;
+    }
+  }
+
+  &__loading {
+    @include flex-center;
+    padding: $spacing-2xl;
+    font-size: $font-size-lg;
+    color: $text-secondary;
+  }
+
+  &__demo {
+    margin-top: $spacing-xl;
+    padding-top: $spacing-lg;
+    border-top: 1px solid $border-color;
+  }
+
+  &__demo-title {
+    font-size: $font-size-sm;
+    font-weight: 600;
+    color: $text-secondary;
+    text-align: center;
+    margin-bottom: $spacing-md;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__demo-roles {
+    @include flex-column;
+    gap: $spacing-sm;
+  }
+
+  &__demo-role {
+    @include flex-between;
+    padding: $spacing-sm $spacing-md;
+    background: $background-color;
+    border-radius: $radius-md;
+    gap: $spacing-sm;
+    flex-wrap: wrap;
+
+    @include responsive(sm) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: $spacing-xs;
+    }
+  }
+
+  &__demo-label {
+    font-size: $font-size-sm;
+    font-weight: 600;
+    color: $text-color;
+    min-width: 60px;
+  }
+
+  &__demo-email {
+    font-size: $font-size-xs;
+    color: $text-secondary;
+    font-family: monospace;
+  }
+
+  &__demo-password {
+    font-size: $font-size-xs;
+    color: $text-secondary;
+    font-family: monospace;
+  }
+
+  &__demo-btn {
+    @include button-base;
+    padding: 4px $spacing-sm;
+    font-size: $font-size-xs;
+    border-radius: $radius-sm;
+    white-space: nowrap;
+
+    &--admin {
+      background: $primary-color;
+      color: white;
+
+      &:hover {
+        background: $primary-hover;
+      }
+    }
+
+    &--manager {
+      background: $text-color;
+      color: white;
+
+      &:hover {
+        background: color.adjust($text-color, $lightness: 10%);
+      }
+    }
+  }
+}
+
+// ============================================
+// LAYOUT
+// ============================================
+.layout {
+  display: flex;
+  min-height: 100vh;
+
+  &__main {
+    flex: 1;
+    margin-left: $sidebar-width;
+    padding: $spacing-xl;
+    transition: margin-left $transition-normal;
+    max-width: calc(100vw - #{$sidebar-width});
+    overflow-x: hidden;
+
+    @include responsive(lg) {
+      margin-left: 0;
+      max-width: 100vw;
+      padding: $spacing-lg;
+    }
+
+    @include responsive(md) {
+      padding: $spacing-md;
+    }
+  }
+
+  &__content {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+}
+
+// ============================================
+// NAVBAR
+// ============================================
+.navbar {
+  @include flex-between;
+  padding: $spacing-md $spacing-xl;
+  background: $card-bg;
+  border-bottom: 1px solid $border-color;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  @include responsive(md) {
+    padding: $spacing-sm $spacing-md;
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+  }
+
+  &__toggle {
+    display: none;
+    font-size: $font-size-xl;
+    color: $text-color;
+    padding: $spacing-xs;
+
+    @include responsive(lg) {
+      display: block;
+    }
+  }
+
+  &__title {
+    font-size: $font-size-lg;
+    font-weight: 600;
+    color: $text-color;
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+  }
+
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  &__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-full;
+    background: $primary-color;
+    color: white;
+    @include flex-center;
+    font-size: $font-size-sm;
+    font-weight: 600;
+  }
+
+  &__info {
+    @include flex-column;
+
+    @include responsive(md) {
+      display: none;
+    }
+  }
+
+  &__name {
+    font-size: $font-size-sm;
+    font-weight: 600;
+    color: $text-color;
+  }
+
+  &__role {
+    font-size: $font-size-xs;
+    color: $text-secondary;
+    text-transform: capitalize;
+  }
+
+  &__logout {
+    @include button-base;
+    background: transparent;
+    color: $danger-color;
+    padding: $spacing-xs $spacing-md;
+    border: 1px solid $danger-color;
+
+    &:hover {
+      background: $danger-color;
+      color: white;
+    }
+  }
+}
+
+// ============================================
+// SIDEBAR
+// ============================================
+.sidebar {
+  width: $sidebar-width;
+  background: $text-color;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 200;
+  transition: transform $transition-normal;
+  @include flex-column;
+
+  &__header {
+    padding: $spacing-lg $spacing-xl;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  &__logo {
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: white;
+  }
+
+  &__logo span {
+    color: $primary-color;
+  }
+
+  &__nav {
+    @include flex-column;
+    gap: $spacing-xs;
+    padding: $spacing-md;
+    flex: 1;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $radius-md;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: $font-size-sm;
+    font-weight: 500;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    &--active {
+      background: $primary-color;
+      color: white;
+    }
+  }
+
+  &__overlay {
+    display: none;
+
+    @include responsive(lg) {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 150;
+    }
+  }
+
+  @include responsive(lg) {
+    transform: translateX(-100%);
+
+    &--open {
+      transform: translateX(0);
+    }
+  }
+}
+
+// ============================================
+// DASHBOARD
+// ============================================
+.dashboard {
+  &__header {
+    margin-bottom: $spacing-xl;
+  }
+
+  &__title {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    color: $text-color;
+  }
+
+  &__subtitle {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+    margin-top: $spacing-xs;
+  }
+
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: $spacing-lg;
+    margin-bottom: $spacing-xl;
+  }
+
+  &__card {
+    @include card;
+    padding: $spacing-lg;
+
+    &-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: $radius-md;
+      @include flex-center;
+      font-size: $font-size-xl;
+      margin-bottom: $spacing-md;
+
+      &--primary {
+        background: rgba($primary-color, 0.1);
+        color: $primary-color;
+      }
+
+      &--warning {
+        background: rgba($warning-color, 0.1);
+        color: $warning-color;
+      }
+
+      &--info {
+        background: rgba($info-color, 0.1);
+        color: $info-color;
+      }
+
+      &--success {
+        background: rgba($success-color, 0.1);
+        color: $success-color;
+      }
+
+      &--danger {
+        background: rgba($danger-color, 0.1);
+        color: $danger-color;
+      }
+    }
+
+    &-value {
+      font-size: $font-size-2xl;
+      font-weight: 700;
+      color: $text-color;
+    }
+
+    &-label {
+      font-size: $font-size-sm;
+      color: $text-secondary;
+      margin-top: $spacing-xs;
+    }
+  }
+
+  &__section {
+    margin-top: $spacing-xl;
+  }
+
+  &__section-title {
+    font-size: $font-size-lg;
+    font-weight: 600;
+    color: $text-color;
+    margin-bottom: $spacing-md;
+  }
+
+  &__recent-tasks {
+    @include card;
+    padding: $spacing-lg;
+  }
+
+  &__task-item {
+    @include flex-between;
+    padding: $spacing-md 0;
+    border-bottom: 1px solid $border-color;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__task-info {
+    @include flex-column;
+    gap: $spacing-xs;
+  }
+
+  &__task-title {
+    font-size: $font-size-sm;
+    font-weight: 600;
+    color: $text-color;
+  }
+
+  &__task-meta {
+    font-size: $font-size-xs;
+    color: $text-secondary;
+  }
+}
+
+// ============================================
+// TEAM
+// ============================================
+.team {
+  &__header {
+    @include flex-between;
+    margin-bottom: $spacing-xl;
+    flex-wrap: wrap;
+    gap: $spacing-md;
+
+    @include responsive(sm) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  &__title {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    color: $text-color;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-sm;
+    align-items: center;
+  }
+
+  &__search {
+    @include input-base;
+    width: 280px;
+    padding: 8px $spacing-md;
+
+    @include responsive(md) {
+      width: 100%;
+    }
+  }
+
+  &__add-btn {
+    @include button-base;
+    background: $primary-color;
+    color: white;
+
+    &:hover {
+      background: $primary-hover;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: $spacing-lg;
+
+    @include responsive(sm) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__empty {
+    @include flex-column;
+    @include flex-center;
+    padding: $spacing-2xl;
+    text-align: center;
+    color: $text-secondary;
+
+    &-icon {
+      font-size: 3rem;
+      margin-bottom: $spacing-md;
+    }
+
+    &-text {
+      font-size: $font-size-lg;
+    }
+  }
+}
+
+// ============================================
+// TEAM MEMBER CARD
+// ============================================
+.member-card {
+  @include card;
+  padding: $spacing-lg;
+  transition: box-shadow $transition-fast;
+  cursor: default;
+
+  &:hover {
+    box-shadow: $shadow-md;
+  }
+
+  &__header {
+    @include flex-between;
+    margin-bottom: $spacing-md;
+  }
+
+  &__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: $radius-full;
+    background: $primary-color;
+    color: white;
+    @include flex-center;
+    font-size: $font-size-lg;
+    font-weight: 600;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-xs;
+  }
+
+  &__action-btn {
+    @include button-base;
+    padding: $spacing-xs $spacing-sm;
+    font-size: $font-size-xs;
+    background: transparent;
+    color: $text-secondary;
+    border: 1px solid $border-color;
+
+    &:hover {
+      background: $background-color;
+    }
+
+    &--danger {
+      color: $danger-color;
+      border-color: rgba($danger-color, 0.3);
+
+      &:hover {
+        background: rgba($danger-color, 0.05);
+      }
+    }
+  }
+
+  &__name {
+    font-size: $font-size-lg;
+    font-weight: 600;
+    color: $text-color;
+    margin-bottom: $spacing-xs;
+  }
+
+  &__position {
+    font-size: $font-size-sm;
+    color: $primary-color;
+    font-weight: 500;
+    margin-bottom: $spacing-xs;
+  }
+
+  &__department {
+    font-size: $font-size-xs;
+    color: $text-secondary;
+    margin-bottom: $spacing-md;
+    display: inline-block;
+    padding: 2px $spacing-sm;
+    background: $background-color;
+    border-radius: $radius-sm;
+  }
+
+  &__email {
+    font-size: $font-size-xs;
+    color: $text-secondary;
+    margin-bottom: $spacing-md;
+  }
+
+  &__view-btn {
+    @include button-base;
+    width: 100%;
+    padding: $spacing-sm;
+    background: transparent;
+    color: $primary-color;
+    border: 1px solid $primary-color;
+    font-size: $font-size-sm;
+
+    &:hover {
+      background: $primary-color;
+      color: white;
+    }
+  }
+}
+
+// ============================================
+// MEMBER DETAILS
+// ============================================
+.member-details {
+  &__header {
+    @include flex-between;
+    margin-bottom: $spacing-xl;
+    flex-wrap: wrap;
+    gap: $spacing-md;
+  }
+
+  &__back {
+    @include button-base;
+    background: transparent;
+    color: $text-secondary;
+    padding: $spacing-xs $spacing-md;
+    border: 1px solid $border-color;
+
+    &:hover {
+      background: $background-color;
+    }
+  }
+
+  &__profile {
+    @include card;
+    padding: $spacing-xl;
+    margin-bottom: $spacing-xl;
+  }
+
+  &__profile-header {
+    display: flex;
+    gap: $spacing-xl;
+    margin-bottom: $spacing-xl;
+
+    @include responsive(md) {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  }
+
+  &__avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: $radius-full;
+    background: $primary-color;
+    color: white;
+    @include flex-center;
+    font-size: $font-size-2xl;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  &__info {
+    flex: 1;
+  }
+
+  &__name {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    color: $text-color;
+    margin-bottom: $spacing-xs;
+  }
+
+  &__position {
+    font-size: $font-size-lg;
+    color: $primary-color;
+    font-weight: 500;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: $spacing-lg;
+
+    @include responsive(sm) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__meta-item {
+    @include flex-column;
+    gap: $spacing-xs;
+
+    label {
+      font-size: $font-size-xs;
+      color: $text-secondary;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    span {
+      font-size: $font-size-sm;
+      color: $text-color;
+    }
+  }
+
+  &__skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+    margin-top: $spacing-lg;
+  }
+
+  &__skill {
+    padding: $spacing-xs $spacing-md;
+    background: rgba($primary-color, 0.1);
+    color: $primary-color;
+    border-radius: $radius-sm;
+    font-size: $font-size-xs;
+    font-weight: 500;
+  }
+
+  &__tasks-section {
+    &-title {
+      font-size: $font-size-lg;
+      font-weight: 600;
+      color: $text-color;
+      margin-bottom: $spacing-md;
+    }
+  }
+}
+
+// ============================================
+// TASK CARD
+// ============================================
+.task-card {
+  @include card;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+
+  &__header {
+    @include flex-between;
+    margin-bottom: $spacing-sm;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+  }
+
+  &__title {
+    font-size: $font-size-base;
+    font-weight: 600;
+    color: $text-color;
+  }
+
+  &__description {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+    margin-bottom: $spacing-md;
+    line-height: 1.5;
+  }
+
+  &__meta {
+    @include flex-between;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+
+    @include responsive(sm) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  &__info {
+    display: flex;
+    gap: $spacing-md;
+    flex-wrap: wrap;
+
+    @include responsive(sm) {
+      flex-direction: column;
+      gap: $spacing-xs;
+    }
+  }
+
+  &__detail {
+    font-size: $font-size-xs;
+    color: $text-secondary;
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-xs;
+  }
+
+  &__action-btn {
+    @include button-base;
+    padding: $spacing-xs $spacing-sm;
+    font-size: $font-size-xs;
+    background: transparent;
+    border: 1px solid $border-color;
+    color: $text-secondary;
+
+    &:hover {
+      background: $background-color;
+    }
+  }
+
+  &__delete-btn {
+    @include button-base;
+    padding: $spacing-xs $spacing-sm;
+    font-size: $font-size-xs;
+    background: transparent;
+    border: 1px solid rgba($danger-color, 0.3);
+    color: $danger-color;
+
+    &:hover {
+      background: rgba($danger-color, 0.05);
+    }
+  }
+}
+
+// ============================================
+// STATUS BADGE
+// ============================================
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px $spacing-sm;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: 600;
+  white-space: nowrap;
+
+  &--pending {
+    background: rgba($pending-color, 0.1);
+    color: color.adjust($pending-color, $lightness: -10%);
+  }
+
+  &--in-progress {
+    background: rgba($in-progress-color, 0.1);
+    color: color.adjust($in-progress-color, $lightness: -10%);
+  }
+
+  &--completed {
+    background: rgba($completed-color, 0.1);
+    color: color.adjust($completed-color, $lightness: -10%);
+  }
+
+  &--low {
+    background: rgba($priority-low, 0.1);
+    color: color.adjust($priority-low, $lightness: -10%);
+  }
+
+  &--medium {
+    background: rgba($priority-medium, 0.1);
+    color: color.adjust($priority-medium, $lightness: -10%);
+  }
+
+  &--high {
+    background: rgba($priority-high, 0.1);
+    color: color.adjust($priority-high, $lightness: -10%);
+  }
+}
+
+// ============================================
+// TASKS PAGE
+// ============================================
+.tasks {
+  &__header {
+    @include flex-between;
+    margin-bottom: $spacing-xl;
+    flex-wrap: wrap;
+    gap: $spacing-md;
+
+    @include responsive(sm) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  &__title {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    color: $text-color;
+  }
+
+  &__add-btn {
+    @include button-base;
+    background: $primary-color;
+    color: white;
+
+    &:hover {
+      background: $primary-hover;
+    }
+  }
+
+  &__list {
+    @include flex-column;
+    gap: $spacing-md;
+  }
+
+  &__empty {
+    @include flex-column;
+    @include flex-center;
+    padding: $spacing-2xl;
+    text-align: center;
+    color: $text-secondary;
+
+    &-icon {
+      font-size: 3rem;
+      margin-bottom: $spacing-md;
+    }
+
+    &-text {
+      font-size: $font-size-lg;
+    }
+  }
+}
+
+// ============================================
+// MODAL
+// ============================================
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  @include flex-center;
+  z-index: 1000;
+  padding: $spacing-lg;
+}
+
+.modal {
+  @include card;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: $spacing-xl;
+
+  @include responsive(sm) {
+    padding: $spacing-lg;
+  }
+
+  &__header {
+    @include flex-between;
+    margin-bottom: $spacing-lg;
+  }
+
+  &__title {
+    font-size: $font-size-lg;
+    font-weight: 600;
+    color: $text-color;
+  }
+
+  &__close {
+    font-size: $font-size-xl;
+    color: $text-secondary;
+    padding: $spacing-xs;
+
+    &:hover {
+      color: $text-color;
+    }
+  }
+
+  &__form {
+    @include flex-column;
+    gap: $spacing-md;
+  }
+
+  &__field {
+    @include flex-column;
+    gap: $spacing-xs;
+
+    label {
+      font-size: $font-size-sm;
+      font-weight: 500;
+      color: $text-color;
+    }
+
+    input,
+    textarea,
+    select {
+      @include input-base;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-sm;
+    justify-content: flex-end;
+    margin-top: $spacing-md;
+  }
+
+  &__cancel {
+    @include button-base;
+    background: transparent;
+    color: $text-secondary;
+    border: 1px solid $border-color;
+
+    &:hover {
+      background: $background-color;
+    }
+  }
+
+  &__submit {
+    @include button-base;
+    background: $primary-color;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background: $primary-hover;
+    }
+  }
+
+  &__delete-text {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+    margin-bottom: $spacing-lg;
+    line-height: 1.5;
+  }
+
+  &__delete-btn {
+    @include button-base;
+    background: $danger-color;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background: $danger-hover;
+    }
+  }
+}
+
+// ============================================
+// PROTECTED ROUTE / LOADING
+// ============================================
+.loading-screen {
+  @include flex-center;
+  min-height: 100vh;
+  font-size: $font-size-lg;
+  color: $text-secondary;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid $border-color;
+  border-top-color: $primary-color;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: $spacing-md;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ============================================
+// RESPONSIVE ADJUSTMENTS
+// ============================================
+@include responsive(md) {
+  .dashboard__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@include responsive(sm) {
+  .dashboard__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .member-details__profile-header {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .modal {
+    margin: $spacing-sm;
+    max-height: 95vh;
+  }
+}
