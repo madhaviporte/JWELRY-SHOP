@@ -4,7 +4,6 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 });
 
-// Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -16,7 +15,6 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor to handle auth errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -29,13 +27,11 @@ api.interceptors.response.use(
   }
 );
 
-// Auth API
 export const authAPI = {
   login: (email, password) => api.post('/auth/login', { email, password }),
   getMe: () => api.get('/auth/me')
 };
 
-// Members API
 export const membersAPI = {
   getAll: (search = '') => api.get('/members', { params: { search } }),
   getById: (id) => api.get(`/members/${id}`),
@@ -44,7 +40,6 @@ export const membersAPI = {
   delete: (id) => api.delete(`/members/${id}`)
 };
 
-// Tasks API
 export const tasksAPI = {
   getAll: () => api.get('/tasks'),
   getById: (id) => api.get(`/tasks/${id}`),

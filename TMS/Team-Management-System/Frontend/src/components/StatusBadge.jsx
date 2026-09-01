@@ -1,5 +1,5 @@
-const StatusBadge = ({ type, value }) => {
-  const getStatusClass = () => {
+const StatusBadge = ({ value }) => {
+  const getBadgeClass = () => {
     switch (value) {
       case 'Pending':
         return 'status-badge--pending';
@@ -19,7 +19,7 @@ const StatusBadge = ({ type, value }) => {
   };
 
   return (
-    <span className={`status-badge ${getStatusClass()}`}>
+    <span className={`status-badge ${getBadgeClass()}`}>
       {value}
     </span>
   );

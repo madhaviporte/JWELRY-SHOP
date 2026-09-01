@@ -1,18 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getInitials } from '../helpers';
 
 const TeamMemberCard = ({ member, onEdit, onDelete }) => {
   const navigate = useNavigate();
   const { isAdmin } = useAuth();
-
-  const getInitials = (name) => {
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
-  };
 
   return (
     <div className="member-card">

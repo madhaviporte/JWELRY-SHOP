@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { membersAPI, tasksAPI } from '../services/api';
+import { getInitials } from '../helpers';
 import TaskCard from '../components/TaskCard';
 
 const MemberDetails = () => {
@@ -16,12 +17,12 @@ const MemberDetails = () => {
 
   const fetchMemberData = async () => {
     try {
-      const [memberRes, tasksRes] = await Promise.all([
+      const [memberResponse, tasksResponse] = await Promise.all([
         membersAPI.getById(id),
         tasksAPI.getByMember(id)
       ]);
-      setMember(memberRes.data.data);
-      setTasks(tasksRes.data.data);
+      setMember(memberResponse.data.data);
+      setTasks(tasksResponse.data.data);
     } catch (error) {
       console.error('Failed to load member data');
       navigate('/team');
@@ -55,15 +56,6 @@ const MemberDetails = () => {
       month: 'long',
       day: 'numeric'
     });
-  };
-
-  const getInitials = (name) => {
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
   };
 
   if (loading) {

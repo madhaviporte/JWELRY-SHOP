@@ -4,20 +4,19 @@ const Task = require('../models/Task');
 exports.getAllMembers = async (req, res) => {
   try {
     const { search } = req.query;
-    let query = {};
 
-    if (search) {
-      query = {
-        $or: [
-          { name: { $regex: search, $options: 'i' } },
-          { email: { $regex: search, $options: 'i' } },
-          { position: { $regex: search, $options: 'i' } },
-          { department: { $regex: search, $options: 'i' } }
-        ]
-      };
-    }
+    const searchFilter = search
+      ? {
+          $or: [
+            { name: { $regex: search, $options: 'i' } },
+            { email: { $regex: search, $options: 'i' } },
+            { position: { $regex: search, $options: 'i' } },
+            { department: { $regex: search, $options: 'i' } }
+          ]
+        }
+      : {};
 
-    const members = await TeamMember.find(query).sort({ createdAt: -1 });
+    const members = await TeamMember.find(searchFilter).sort({ createdAt: -1 });
     res.status(200).json({ success: true, data: members });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error.' });

@@ -1,16 +1,8 @@
 import { useAuth } from '../context/AuthContext';
+import { getInitials } from '../helpers';
 
 const Navbar = ({ onToggleSidebar }) => {
   const { user, logout } = useAuth();
-
-  const getInitials = (name) => {
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
-  };
 
   return (
     <nav className="navbar">

@@ -164,7 +164,6 @@ const Team = () => {
         </div>
       )}
 
-      {/* Add/Edit Modal */}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -273,7 +272,6 @@ const Team = () => {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
       {deletingMember && (
         <div
           className="modal-overlay"

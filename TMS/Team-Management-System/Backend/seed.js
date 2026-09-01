@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 const User = require('./models/User');
@@ -11,13 +10,11 @@ const seedData = async () => {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('MongoDB connected for seeding...');
 
-    // Clear existing data
     await User.deleteMany({});
     await TeamMember.deleteMany({});
     await Task.deleteMany({});
     console.log('Existing data cleared.');
 
-    // Create Users (Admin and Manager)
     const admin = await User.create({
       name: 'Admin User',
       email: 'admin@example.com',
@@ -34,7 +31,6 @@ const seedData = async () => {
 
     console.log('Users created.');
 
-    // Create Team Members
     const members = await TeamMember.insertMany([
       {
         name: 'Madhavi porte',
@@ -100,7 +96,6 @@ const seedData = async () => {
 
     console.log('Team members created.');
 
-    // Create Tasks
     const tasks = await Task.insertMany([
       {
         title: 'Build Landing Page',

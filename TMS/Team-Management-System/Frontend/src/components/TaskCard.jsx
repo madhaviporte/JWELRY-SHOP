@@ -29,9 +29,9 @@ const TaskCard = ({ task, onStatusChange, onDelete, showMember = true }) => {
     <div className="task-card">
       <div className="task-card__header">
         <h3 className="task-card__title">{task.title}</h3>
-        <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-          <StatusBadge type="priority" value={task.priority} />
-          <StatusBadge type="status" value={task.status} />
+        <div className="task-card__badges">
+          <StatusBadge value={task.priority} />
+          <StatusBadge value={task.status} />
         </div>
       </div>
       {task.description && (

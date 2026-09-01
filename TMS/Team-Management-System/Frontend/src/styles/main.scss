@@ -498,6 +498,11 @@
     font-size: $font-size-xs;
     color: $text-secondary;
   }
+
+  &__empty-text {
+    color: $text-secondary;
+    padding: $spacing-md;
+  }
 }
 
 // ============================================
@@ -822,6 +827,12 @@
     font-size: $font-size-base;
     font-weight: 600;
     color: $text-color;
+  }
+
+  &__badges {
+    display: flex;
+    gap: 6px;
+    align-items: center;
   }
 
   &__description {

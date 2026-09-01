@@ -19,20 +19,20 @@ const Dashboard = () => {
 
   const fetchDashboardData = async () => {
     try {
-      const [membersRes, tasksRes] = await Promise.all([
+      const [membersResponse, tasksResponse] = await Promise.all([
         membersAPI.getAll(),
         tasksAPI.getAll()
       ]);
 
-      const members = membersRes.data.data;
-      const tasks = tasksRes.data.data;
+      const members = membersResponse.data.data;
+      const tasks = tasksResponse.data.data;
 
       setStats({
         totalMembers: members.length,
         totalTasks: tasks.length,
-        pendingTasks: tasks.filter((t) => t.status === 'Pending').length,
-        inProgressTasks: tasks.filter((t) => t.status === 'In Progress').length,
-        completedTasks: tasks.filter((t) => t.status === 'Completed').length
+        pendingTasks: tasks.filter((task) => task.status === 'Pending').length,
+        inProgressTasks: tasks.filter((task) => task.status === 'In Progress').length,
+        completedTasks: tasks.filter((task) => task.status === 'Completed').length
       });
 
       setRecentTasks(tasks.slice(0, 5));
@@ -100,7 +100,7 @@ const Dashboard = () => {
         <h2 className="dashboard__section-title">Recent Tasks</h2>
         <div className="dashboard__recent-tasks">
           {recentTasks.length === 0 ? (
-            <p style={{ color: '#64748b', padding: '1rem' }}>No tasks found.</p>
+            <p className="dashboard__empty-text">No tasks found.</p>
           ) : (
             recentTasks.map((task) => (
               <div key={task._id} className="dashboard__task-item">
@@ -111,7 +111,7 @@ const Dashboard = () => {
                     {new Date(task.dueDate).toLocaleDateString()}
                   </span>
                 </div>
-                <StatusBadge type="status" value={task.status} />
+                <StatusBadge value={task.status} />
               </div>
             ))
           )}
