@@ -8,7 +8,6 @@ This project helps admins and managers manage team members, create and assign ta
 
 Frontend: https://team-management-system-nine.vercel.app
 
-Backend: https://team-management-backend-q8rp.onrender.com
 
 ## Features
 
