@@ -206,7 +206,7 @@ const Team = () => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleFormChange}
-                  placeholder="+1-555-0000"
+                  placeholder="+91-0000000000"
                 />
               </div>
               <div className="modal__field">
